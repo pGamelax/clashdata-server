@@ -8,6 +8,6 @@ RUN bun install
 COPY . .
 
 # Ajuste para a porta que você definiu no Elysia (ex: 3000)
-EXPOSE 3000
+EXPOSE 3333
 
 CMD ["bun", "run", "src/index.ts"]
