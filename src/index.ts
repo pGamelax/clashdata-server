@@ -6,11 +6,11 @@ import { z } from "zod";
 import { adminPlugin } from "./http/plugins/admin-auth";
 import { betterAuthPlugin, OpenAPI } from "./http/plugins/better-auth";
 //bullboard
-import { serverAdapter } from "./bullmq";
+//import { serverAdapter } from "./bullmq";
 
 //workers bullmq
-import "./workers/find-war-queue";
-import "./workers/save-stats-war.queue";
+// import "./workers/find-war-queue";
+// import "./workers/save-stats-war.queue";
 
 //controllers
 import { dashboard } from "./modules/dashboard";
@@ -43,7 +43,6 @@ const app = new Elysia()
   .use(clans)
   .use(dashboard)
   .use(players)
-  .use(serverAdapter.registerPlugin())
   .get("/", () => "Hello Elysia", {
     auth: true,
   })

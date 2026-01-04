@@ -3,7 +3,6 @@ import { UserRepository } from "../users/repository";
 import { ClanModel } from "./model";
 import { ClanRepository } from "./repository";
 import { env } from "@/env";
-import { findWarQueue } from "@/bullmq";
 import { BadRequest } from "@/errors/Errors";
 
 export abstract class ClanService {
@@ -86,15 +85,6 @@ export class ClanServiceImpl extends ClanService {
       throw new BadRequest("Clan not found");
     }
 
-    findWarQueue.add(
-      "find-war-job",
-      { clanTag: clan.tag },
-      {
-        jobId: `find-war-${clan.tag}`,
-        removeOnComplete: true,
-        removeOnFail: true,
-      },
-    );
     return { message: `Queue started with successfully to clan ${clan.name}` };
   }
 
