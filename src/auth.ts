@@ -7,7 +7,7 @@ import { users } from "./database/schema/users";
 export const auth = betterAuth({
   basePath: "/auth",
   plugins: [openAPI(), admin()],
-  trustedOrigins: ["http://localhost:3000"],
+  trustedOrigins: ["https://clashdata.pro"],
   database: drizzleAdapter(db, {
     provider: "pg",
     usePlural: true,
