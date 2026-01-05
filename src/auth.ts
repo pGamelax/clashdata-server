@@ -38,6 +38,7 @@ export const auth = betterAuth({
     },
   },
   cookie: {
+    domain: ".clashdata.pro",
     attributes: {
       secure: true, // Obrigatório em HTTPS
       sameSite: "none", // Necessário para domínios diferentes (api vs site)
