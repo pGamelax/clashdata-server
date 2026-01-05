@@ -13,8 +13,13 @@ export const auth = betterAuth({
     usePlural: true,
   }),
   advanced: {
+    useSecureCookies: true,
     database: {
       generateId: false,
+    },
+    cookiePrefix: "clashdata",
+    crossSubDomainCookies: {
+      enabled: true,
     },
   },
   emailAndPassword: {
@@ -30,6 +35,13 @@ export const auth = betterAuth({
     cookieCache: {
       enabled: true,
       maxAge: 60 * 5,
+    },
+  },
+  cookie: {
+    attributes: {
+      secure: true, // Obrigatório em HTTPS
+      sameSite: "none", // Necessário para domínios diferentes (api vs site)
+      httpOnly: true,
     },
   },
 });
