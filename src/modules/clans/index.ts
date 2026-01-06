@@ -1,6 +1,6 @@
 import { adminPlugin } from "@/http/plugins/admin-auth";
 import { betterAuthPlugin } from "@/http/plugins/better-auth";
-import { Elysia } from "elysia";
+import { Elysia, t } from "elysia";
 import { ClanModel } from "@/modules/clans/model";
 import { ClanServiceImpl } from "./service";
 
@@ -74,11 +74,14 @@ export const clans = new Elysia({ prefix: "/clans" })
     },
   )
   .get(
-    "/clan-info/:clanTag",
-    async ({ params }) => {
+    "/clan-info", // Removido o :clanTag do path
+    async ({ query }) => {
+      // Alterado de params para query
+      const { clanTag } = query;
       const clanService = new ClanServiceImpl();
+
       const clanInfo = await clanService.getClanInfo({
-        clanTag: params.clanTag,
+        clanTag: clanTag,
       });
 
       return clanInfo;
@@ -90,7 +93,10 @@ export const clans = new Elysia({ prefix: "/clans" })
         description: "Get info for a clan.",
         tags: ["Clan"],
       },
-      params: ClanModel.clanInfoParams,
+
+      query: t.Object({
+        clanTag: t.String(),
+      }),
       response: {
         200: ClanModel.clanInfoResponse,
         400: ClanModel.clanInfoInvalid,
