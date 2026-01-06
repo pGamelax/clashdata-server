@@ -74,7 +74,7 @@ export const clans = new Elysia({ prefix: "/clans" })
     },
   )
   .get(
-    "/clan-info", // Removido o :clanTag do path
+    "/info", // Removido o :clanTag do path
     async ({ query }) => {
       // Alterado de params para query
       const { clanTag } = query;
