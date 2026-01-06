@@ -17,9 +17,9 @@ export const auth = betterAuth({
     database: {
       generateId: false,
     },
-    cookiePrefix: "clashdata",
     crossSubDomainCookies: {
       enabled: true,
+      domain: "clashdata.pro",
     },
   },
   emailAndPassword: {
@@ -35,14 +35,6 @@ export const auth = betterAuth({
     cookieCache: {
       enabled: true,
       maxAge: 60 * 5,
-    },
-  },
-  cookie: {
-    domain: "clashdata.pro",
-    attributes: {
-      secure: true,
-      sameSite: "none",
-      httpOnly: true,
     },
   },
 });
