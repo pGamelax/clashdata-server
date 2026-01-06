@@ -23,7 +23,7 @@ import { BadRequest } from "./errors/Errors";
 const app = new Elysia()
   .use(
     cors({
-      origin: "https://clashdata.pro",
+      origin: ["https://clashdata.pro"],
       methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
       credentials: true,
       allowedHeaders: ["Content-Type", "Authorization"],
