@@ -74,10 +74,11 @@ export const clans = new Elysia({ prefix: "/clans" })
     },
   )
   .get(
-    "/info", // Removido o :clanTag do path
+    "/clan-info", // Removido o :clanTag do path
     async ({ query }) => {
       // Alterado de params para query
       const { clanTag } = query;
+      console.log(clanTag);
       const clanService = new ClanServiceImpl();
 
       const clanInfo = await clanService.getClanInfo({
