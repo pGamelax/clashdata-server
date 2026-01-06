@@ -1,24 +1,28 @@
 import { betterAuthPlugin } from "@/http/plugins/better-auth";
-import Elysia from "elysia";
+import Elysia, { t } from "elysia"; // Certifique-se de importar 't' para validação
 import { DashboardService } from "./service";
-import { DashboardModel } from "./model";
 
 const dashboardService = new DashboardService();
 
 export const dashboard = new Elysia({ prefix: "/dashboard" })
   .use(betterAuthPlugin)
   .get(
-    "/data/:clanTag",
-    async ({ params, user }) => {
-      const { clanTag } = params;
+    "/data", // Alterado: removemos o /:clanTag da rota
+    async ({ query, user }) => {
+      const { clanTag } = query; // Agora pegamos de 'query' em vez de 'params'
+
       const dashboard = await dashboardService.getDashboardFromAPI({
         clanTag,
         userId: user.id,
       });
+
       return dashboard;
     },
     {
       auth: true,
-      params: DashboardModel.paramsDashboard,
+      // Alterado: Validamos 'query' em vez de 'params'
+      query: t.Object({
+        clanTag: t.String(),
+      }),
     },
   );
