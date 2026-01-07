@@ -2,12 +2,12 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "./database/client";
 import { admin, openAPI } from "better-auth/plugins";
-import { users } from "./database/schema/users";
+import { env } from "./env";
 
 export const auth = betterAuth({
   basePath: "/auth",
   plugins: [openAPI(), admin()],
-  trustedOrigins: ["https://clashdata.pro", "https://api.clashdata.pro"],
+  trustedOrigins: env.BETTER_AUTH_TRUSTED_ORIGIN,
   database: drizzleAdapter(db, {
     provider: "pg",
     usePlural: true,
@@ -19,7 +19,7 @@ export const auth = betterAuth({
     },
     crossSubDomainCookies: {
       enabled: true,
-      domain: "clashdata.pro",
+      domain: env.BETTER_AUTH_TRUSTED_DOMAIN,
     },
   },
   emailAndPassword: {

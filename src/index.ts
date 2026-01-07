@@ -19,11 +19,12 @@ import { players } from "./modules/players";
 
 //errors handler
 import { BadRequest } from "./errors/Errors";
+import { env } from "./env";
 
 const app = new Elysia()
   .use(
     cors({
-      origin: ["https://clashdata.pro"],
+      origin: env.BETTER_AUTH_TRUSTED_ORIGIN,
       methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
       credentials: true,
       allowedHeaders: ["Content-Type", "Authorization"],
