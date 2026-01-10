@@ -47,38 +47,10 @@ export const clans = new Elysia({ prefix: "/clans" })
       auth: true,
     },
   )
-  .post(
-    "/start-queue",
-    async ({ body }) => {
-      const clanService = new ClanServiceImpl();
-
-      const clanStarted = await clanService.startQueue({
-        clanTag: body.clanTag,
-      });
-
-      return clanStarted;
-    },
-    {
-      auth: true,
-      admin: true,
-      detail: {
-        summary: "Start queue",
-        description: "Start a queue for a clan.",
-        tags: ["Clan"],
-      },
-      body: ClanModel.startQueueBody,
-      response: {
-        200: ClanModel.startQueueResponse,
-        400: ClanModel.startQueueInvalid,
-      },
-    },
-  )
   .get(
     "/clan-info", // Removido o :clanTag do path
     async ({ query }) => {
-      // Alterado de params para query
       const { clanTag } = query;
-      console.log(clanTag);
       const clanService = new ClanServiceImpl();
 
       const clanInfo = await clanService.getClanInfo({

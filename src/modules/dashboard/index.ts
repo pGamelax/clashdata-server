@@ -7,7 +7,7 @@ const dashboardService = new DashboardService();
 export const dashboard = new Elysia({ prefix: "/dashboard" })
   .use(betterAuthPlugin)
   .get(
-    "/data", // Alterado: removemos o /:clanTag da rota
+    "/data",
     async ({ query, user }) => {
       const { clanTag } = query; // Agora pegamos de 'query' em vez de 'params'
 
