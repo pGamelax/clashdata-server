@@ -9,7 +9,7 @@ export const dashboard = new Elysia({ prefix: "/dashboard" })
   .get(
     "/data",
     async ({ query, user }) => {
-      const { clanTag } = query; // Agora pegamos de 'query' em vez de 'params'
+      const { clanTag } = query;
 
       const dashboard = await dashboardService.getDashboardFromAPI({
         clanTag,
@@ -20,7 +20,7 @@ export const dashboard = new Elysia({ prefix: "/dashboard" })
     },
     {
       auth: true,
-      // Alterado: Validamos 'query' em vez de 'params'
+
       query: t.Object({
         clanTag: t.String(),
       }),
