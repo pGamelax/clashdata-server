@@ -5,6 +5,8 @@ WORKDIR /app
 COPY package.json bun.lock ./
 RUN bun install
 
+RUN bunx --bun prisma generate
+
 COPY . .
 
 # Ajuste para a porta que você definiu no Elysia (ex: 3000)
