@@ -5,17 +5,12 @@ import { z } from "zod";
 
 import { adminPlugin } from "./http/plugins/admin-auth";
 import { betterAuthPlugin, OpenAPI } from "./http/plugins/better-auth";
-//bullboard
-//import { serverAdapter } from "./bullmq";
-
-//workers bullmq
-// import "./workers/find-war-queue";
-// import "./workers/save-stats-war.queue";
 
 //controllers
 import { dashboard } from "./modules/dashboard";
 import { clans } from "./modules/clans";
 import { players } from "./modules/players";
+import { push } from "./modules/push";
 
 //errors handler
 import { BadRequest } from "./errors/Errors";
@@ -29,7 +24,7 @@ const app = new Elysia()
       credentials: true,
       allowedHeaders: ["Content-Type", "Authorization"],
       exposeHeaders: ["set-cookie"],
-    }),
+    })
   )
   .use(
     openapi({
@@ -37,7 +32,7 @@ const app = new Elysia()
         components: await OpenAPI.components,
         paths: await OpenAPI.getPaths(),
       },
-    }),
+    })
   )
   .error({ BadRequest })
   .use(betterAuthPlugin)
@@ -45,38 +40,9 @@ const app = new Elysia()
   .use(clans)
   .use(dashboard)
   .use(players)
-  .get("/", () => "Hello Elysia", {
-    auth: true,
-  })
-  .get(
-    "/users/:id",
-    ({ params, user }) => {
-      const userId = params.id;
-      const authenticatedUserName = user.name;
-
-      return { id: userId, name: authenticatedUserName };
-    },
-    {
-      auth: true,
-      admin: true,
-      detail: {
-        summary: "Get user by ID",
-        description: "Retrieve a user by their unique ID.",
-        tags: ["User"],
-      },
-      params: z.object({
-        id: z.string(),
-      }),
-      response: {
-        200: z.object({
-          id: z.string(),
-          name: z.string(),
-        }),
-      },
-    },
-  )
+  .use(push)
   .listen({ hostname: "0.0.0.0", port: 3333 });
 
 console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
+  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
 );

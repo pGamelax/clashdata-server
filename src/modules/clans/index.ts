@@ -48,7 +48,7 @@ export const clans = new Elysia({ prefix: "/clans" })
     },
   )
   .get(
-    "/clan-info", // Removido o :clanTag do path
+    "/clan-info",
     async ({ query }) => {
       const { clanTag } = query;
       const clanService = new ClanServiceImpl();

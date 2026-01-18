@@ -1,88 +1,14 @@
-import { eq } from "drizzle-orm";
-import { db } from "@/database/client";
-import { clans } from "@/database/schema/clans";
-import { DashboardRepository } from "./repository";
+import { prisma } from "@/lib/prisma";
 import { Unauthorized } from "@/errors/Errors";
 
-const repo = new DashboardRepository();
-
 export class DashboardService {
-  async getDashboard(params: {
-    clanTag: string;
-    userId: string;
-    page: number;
-    limit: number;
-  }) {
-    const { clanTag, userId, page, limit } = params;
-
-    const clan = await db.query.clans.findFirst({
-      where: eq(clans.tag, clanTag),
-    });
-
-    if (!clan) {
-      throw new Error("User not have a clan");
-    }
-
-    if (clan.userId !== userId) {
-      throw new Unauthorized("User not have access to this clan");
-    }
-
-    const groupedStats = await repo.getPlayersStatsByClan(clan.id);
-
-    const ranked = groupedStats
-      .map((stat) => {
-        const totalAttacks = Number(stat.countId);
-        const totalStars = Number(stat.sumStars ?? 0);
-        const totalDestruction = Number(stat.sumDestruction ?? 0);
-
-        return {
-          playerId: stat.playerId,
-          totalAttacks,
-          totalStars,
-          totalDestruction,
-          avgStars: totalStars / totalAttacks,
-          avgDestruction: totalDestruction / totalAttacks,
-        };
-      })
-      .sort((a, b) => b.avgStars - a.avgStars);
-
-    const paginatedPlayers = ranked.slice((page - 1) * limit, page * limit);
-
-    const playersData = await Promise.all(
-      paginatedPlayers.map(async (p) => {
-        const info = await repo.getPlayerInfo(p.playerId);
-        const attacksData = await repo.getPlayerAttacks({
-          playerId: p.playerId,
-          clanId: clan.id,
-        });
-
-        return {
-          ...info,
-          stats: {
-            totalAttacks: p.totalAttacks,
-            totalStars: p.totalStars,
-            avgStars: Number(p.avgStars.toFixed(2)),
-            avgDestruction: Number(p.avgDestruction.toFixed(2)),
-          },
-          attacks: attacksData,
-        };
-      }),
-    );
-
-    return {
-      players: playersData,
-      pagination: {
-        page,
-        totalPlayers: await repo.countPlayersByClan(clan.id),
-      },
-    };
-  }
-
   async getDashboardFromAPI(params: { clanTag: string; userId: string }) {
     const { clanTag, userId } = params;
 
-    const clan = await db.query.clans.findFirst({
-      where: eq(clans.tag, clanTag),
+    const clan = await prisma.clan.findFirst({
+      where: {
+        tag: clanTag,
+      },
     });
 
     if (!clan) throw new Error("Clan not registered in database");

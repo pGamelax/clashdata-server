@@ -1,16 +1,17 @@
 import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { db } from "./database/client";
+import { prismaAdapter } from "better-auth/adapters/prisma";
+
 import { admin, openAPI } from "better-auth/plugins";
 import { env } from "./env";
+import { prisma } from "./lib/prisma";
 
 export const auth = betterAuth({
   basePath: "/auth",
   plugins: [openAPI(), admin()],
   trustedOrigins: env.BETTER_AUTH_TRUSTED_ORIGIN,
-  database: drizzleAdapter(db, {
-    provider: "pg",
-    usePlural: true,
+  database: prismaAdapter(prisma, {
+    provider: "postgresql",
+    usePlural: false,
   }),
   advanced: {
     useSecureCookies: true,

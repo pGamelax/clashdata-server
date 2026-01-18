@@ -110,7 +110,7 @@ export class ClanServiceImpl extends ClanService {
   async getAllClans({ userId }: { userId: string }): Promise<ClanModel.Clan[]> {
     const clanRepository = new ClanRepository();
 
-    const clans = await clanRepository.findAll({ userId });
+    const clans = await clanRepository.findAllByUser({ userId });
     if (!clans) return [];
 
     return clans.map((clan) => ({

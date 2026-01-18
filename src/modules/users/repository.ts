@@ -1,14 +1,13 @@
-import { db } from "@/database/client";
-import { users } from "@/database/schema/users";
-import { eq } from "drizzle-orm";
+import { prisma } from "@/lib/prisma";
 
 export class UserRepository {
   async findByEmail({ email }: { email: string }) {
-    const [userFound] = await db
-      .select()
-      .from(users)
-      .where(eq(users.email, email));
+    const user = await prisma.user.findFirst({
+      where: {
+        email,
+      },
+    });
 
-    return userFound;
+    return user;
   }
 }

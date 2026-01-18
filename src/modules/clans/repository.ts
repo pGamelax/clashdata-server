@@ -1,7 +1,5 @@
-import { db } from "@/database/client";
-import { clans } from "@/database/schema/clans";
 import { BadRequest } from "@/errors/Errors";
-import { eq } from "drizzle-orm";
+import { prisma } from "@/lib/prisma";
 
 export class ClanRepository {
   async create({
@@ -13,19 +11,22 @@ export class ClanRepository {
     name: string;
     userId: string;
   }) {
-    const [clanCreated] = await db
-      .insert(clans)
-      .values({
-        tag: clanTag,
+    const clanCreated = await prisma.clan.create({
+      data: {
         name,
+        tag: clanTag,
         userId,
-      })
-      .returning();
-
+      },
+    });
     return clanCreated;
   }
+
   async findByTag({ clanTag }: { clanTag: string }) {
-    const [clan] = await db.select().from(clans).where(eq(clans.tag, clanTag));
+    const clan = await prisma.clan.findFirst({
+      where: {
+        tag: clanTag,
+      },
+    });
 
     if (!clan) {
       throw new BadRequest("Clan not found");
@@ -34,12 +35,13 @@ export class ClanRepository {
     return clan;
   }
 
-  async findAll({ userId }: { userId: string }) {
-    const clansFound = await db
-      .select()
-      .from(clans)
-      .where(eq(clans.userId, userId));
+  async findAllByUser({ userId }: { userId: string }) {
+    const clansByUser = await prisma.clan.findMany({
+      where: {
+        userId,
+      },
+    });
 
-    return clansFound;
+    return clansByUser;
   }
 }
